@@ -71,6 +71,10 @@ Title
 <!-- Drawing poles in the s-plane -->
 <div id="s-plane-container">
     <canvas id="s-plane" width="500" height="500"></canvas>
+    <div id='function'>
+      Transfer Function:
+      <p id='transfer-function'>1</p>
+    </div>
 </div>
 
 <!-- Real-time visualizer view + controls -->
@@ -80,24 +84,15 @@ Title
     <div id="info"> </div>
 </div>
 
-<!-- Analyser type -->
-<input type="radio" name="radioSet" value="data" onMouseDown="analyserView1.setAnalysisType(ANALYSISTYPE_FREQUENCY);" />
-Frequency
-<input type="radio" name="radioSet" value="data" onMouseDown="analyserView1.setAnalysisType(ANALYSISTYPE_SONOGRAM);" />
-Sonogram
-<input type="radio" name="radioSet" value="data" checked="checked" onMouseDown="analyserView1.setAnalysisType(ANALYSISTYPE_3D_SONOGRAM);" />
-3D Sonogram
-<input type="radio" name="radioSet" value="data" onMouseDown="analyserView1.setAnalysisType(ANALYSISTYPE_WAVEFORM);"/>
-Waveform
 <div>
-<button onclick="startFiltering()">
-Start Filtering
-</button>
 <button onclick="switchToNoise()">
 Noise
 </button>
 <button onclick="switchToFile()">
 Audio File
+</button>
+<button onclick="switchToLive()">
+Mic
 </button>
 </div>
 </body>

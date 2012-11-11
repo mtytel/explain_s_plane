@@ -7,3 +7,7 @@
     border: 1px solid black;
     background: white;
 }
+
+#function {
+  max-width: 500px;
+}

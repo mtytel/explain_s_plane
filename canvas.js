@@ -13,7 +13,7 @@ var dragging_poles = [];
 
 var w = splane.width;
 var h = splane.height;
-var k = 1.2; // we will think of the plane as 2 x 2 
+var k = 0.4; // we will think of the plane as 2 x 2 
 
 setInterval(update_data, 10);
 

@@ -51,6 +51,23 @@ function filter() {
     in_coefs = in_coefficients;
   };
 
+  function round(num) {
+    return Math.round(num * 100) / 100;
+  }
+
+  var toFunctionString = function() {
+    var numerator = "" + in_coefs[0];
+    var denominator = "1";
+    for (var i = 1; i < MAX_POLES; i++) {
+      if (in_coefs[i] != 0)
+        numerator += " + " + round(in_coefs[i]) + "z^-" + i;
+      if (out_coefs[i] != 0)
+        denominator += " + " + -round(out_coefs[i]) + "z^-" + i;
+    }
+    return "(" + numerator + ") / (" + denominator + ")";
+  }
+
+
   var next = function(sample) {
     var total = 0;
     var output = 0;
@@ -70,6 +87,7 @@ function filter() {
 
   return {
     next: next,
+    toFunctionString: toFunctionString,
     setInCoefficients: setInCoefficients,
     setOutCoefficients: setOutCoefficients,
   };
@@ -171,6 +189,8 @@ function updateFilterWithPoles(sPoles) {
   rightFilter.setInCoefficients(in_coefs);
   leftFilter.setOutCoefficients(out_coefs);
   rightFilter.setOutCoefficients(out_coefs);
+
+  $('#transfer-function').html(leftFilter.toFunctionString());
 }
 
 function clip(s) {
@@ -206,7 +226,7 @@ function loadSample(url) {
   request.open("GET", url, true);
   request.responseType = "arraybuffer";
 
-  request.onload = function() { 
+  request.onload = function() {
     source.buffer = context.createBuffer(request.response, false);
     source.looping = true;
     source.noteOn(0);
@@ -238,18 +258,6 @@ if ( !window.requestAnimationFrame ) {
       };
     }
   )();
-}
-
-function startFiltering() {
-  var scale = complex(1, 0);
-  updateFilterWithPoles([
-      scale.mult(complex(-0.2588190451, 0.96592582628)),
-      scale.mult(complex(-0.70710678118, 0.70710678118)),
-      scale.mult(complex(-0.96592582628, 0.2588190451)),
-      scale.mult(complex(-0.96592582628, -0.2588190451)),
-      scale.mult(complex(-0.70710678118, -0.70710678118)),
-      scale.mult(complex(-0.2588190451, -0.96592582628))
-  ]);
 }
 
 function draw() {
