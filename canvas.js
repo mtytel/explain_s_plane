@@ -111,17 +111,14 @@ function draw_circle_pair(x, y, color) {
     if (!add_pole_pair(x,y)) {
         return;
     }
-    _circle(x, y, color);
-    _circle(x, -y, color);
+    _redraw_all_poles();
 }
 
 function erase_circle_pair(x, y) { 
     if (!remove_pole_pair(x,y)) {
         return;
     }
-    _circle(x, y, 'white');
-    _circle(x, -y, 'white');
-    draw_axes();
+    _redraw_all_poles();
 }
 
 function move_pole_pair(poles, x, y) {
@@ -130,8 +127,13 @@ function move_pole_pair(poles, x, y) {
     }
     var oldx = poles[0][0];
     var oldy = poles[0][1];
-    erase_circle_pair(oldx, oldy);
-    draw_circle_pair(x, y, 'blue');
+    if (!remove_pole_pair(oldx, oldy)) {
+        return;
+    }
+    if (!add_pole_pair(x, y)) {
+        return;
+    }
+    _redraw_all_poles();
 }
 
 function recolor_poles(poles, color) {
@@ -141,6 +143,15 @@ function recolor_poles(poles, color) {
         _circle(px, py, color);
         _circle(px, -py, color);
     }
+}
+
+function _redraw_all_poles() {
+    _reset_canvas();
+    draw_axes();
+    for (var i = 0; i < poles.length; i++) {
+        _circle(poles[i][0], poles[i][1], 'green');
+    }
+    recolor_poles(dragging_poles, 'blue');
 }
 
 function _circle(x, y, color) {
@@ -153,6 +164,11 @@ function _circle(x, y, color) {
     context.arc(x + w/2, y + h/2, r, 0, 2 * Math.PI, false);
     context.fillStyle = color;
     context.fill();
+}
+
+function _reset_canvas() {
+    splane_context.fillStyle = 'white';
+    splane_context.fillRect(0,0,w,h);
 }
 
 function draw_axes() {
