@@ -37,12 +37,15 @@ Interactive S-Plane
 
 <h1> Interactive S-Plane </h1>
 
-<div id="scale-slider"></div>
+<h4>Function Scale</h4>
+<div id="slider-container">
+    <div id="scale-slider"></div>
+</div>
 <!-- Drawing poles in the s-plane -->
 <div id="s-plane-container">
     <canvas id="s-plane" width="500" height="500"></canvas>
     <div id='function'>
-      Filter Function:
+      <h4>Filter Function</h4>
       <p id='recursion-function'>1</p>
     </div>
     <h4>Examples</h4>
@@ -51,18 +54,19 @@ Interactive S-Plane
 
 <!-- Real-time visualizer view + controls -->
 <div id="output-container">
-    <canvas id="view1" width="800px" height="600px"></canvas>
-    <div id="controls"> </div>
-    <div id="info"> </div>
-</div>
-
-<div>
-<button onclick="switchToNoise()">
-Noise
-</button>
-<button onclick="switchToFile()">
-Audio File
-</button>
+    <canvas id="view1" width="800px" height="500px"></canvas>
+    <div id="controls"> 
+        <h4>Options</h4>
+        <button onclick="switchToNoise()">
+            Noise
+        </button>
+        <button onclick="switchToFile()">
+            Audio File
+        </button>
+        <button onclick="switchToLive()">
+            Mic
+        </button>
+    </div>
 </div>
 </body>
 </html>
