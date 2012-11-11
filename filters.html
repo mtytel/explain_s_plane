@@ -68,10 +68,6 @@ Title
 
 <h1> JavaScript Processing </h1>
 
-<p>
-This example illustrates a simple amplitude modulation effect processed directly in JavaScript.
-</p>
-
 <!-- Drawing poles in the s-plane -->
 <div id="s-plane-container">
     <canvas id="s-plane" width="500" height="500"></canvas>
@@ -96,6 +92,12 @@ Waveform
 <div>
 <button onclick="startFiltering()">
 Start Filtering
+</button>
+<button onclick="switchToNoise()">
+Noise
+</button>
+<button onclick="switchToFile()">
+Audio File
 </button>
 </div>
 </body>

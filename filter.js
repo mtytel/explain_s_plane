@@ -5,6 +5,7 @@ var source = 0;
 var jsProcessor = 0;
 var analyser;
 var analyserView1;
+var noise = false;
 
 var MAX_POLES = 12;
 
@@ -189,8 +190,12 @@ function process(event) {
   var n = inputArrayL.length;
 
   for (var i = 0; i < n; ++i) {
-    var l = Math.random() - 0.5;
-    var r = Math.random() - 0.5;
+    var l = inputArrayL[i];
+    var r = inputArrayR[i];
+    if (noise) {
+      l = Math.random() - 0.5;
+      r = Math.random() - 0.5;
+    }
     outputArrayL[i] = clip(leftFilter.next(l));
     outputArrayR[i] = clip(rightFilter.next(r));
   }
@@ -210,6 +215,14 @@ function loadSample(url) {
   }
 
   request.send();
+}
+
+function switchToNoise() {
+  noise = true;
+}
+
+function switchToFile() {
+  noise = false;
 }
 
 if ( !window.requestAnimationFrame ) {
@@ -261,6 +274,6 @@ function initAudio() {
   jsProcessor.connect(analyser);
   analyser.connect(context.destination);
 
-  loadSample("sounds/bells.wav");
+  loadSample("sounds/amen.wav");
 }
 
