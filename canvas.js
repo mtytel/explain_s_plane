@@ -57,7 +57,7 @@ function update_data() {
     for (var i = 0; i < poles.length; i++) {
         var x = poles[i][0];
         var y = poles[i][1];
-        ps.push([x/(w/2)*k, y/(h/2)*k]);
+        ps.push(complex(x/(w/2)*k, y/(h/2)*k));
     }
     updateFilterWithPoles(ps);
 }
