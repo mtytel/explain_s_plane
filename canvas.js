@@ -15,7 +15,7 @@ var w = splane.width;
 var h = splane.height;
 var k = 2; // we will think of the plane as 2 x 2 
 
-setInterval(update_data, 500);
+setInterval(update_data, 10);
 
 draw_axes();
 
@@ -40,7 +40,7 @@ var omm = function(ev) {
         dragging_poles = [[x,y],[x,-y]];
     }
 };
-var on_mouse_move = _.throttle(omm, 50);
+var on_mouse_move = _.throttle(omm, 10);
 $splane.on('mousemove', on_mouse_move);
 
 $splane.on('mouseup', function(ev) {
@@ -111,17 +111,29 @@ function draw_circle_pair(x, y, color) {
     if (!add_pole_pair(x,y)) {
         return;
     }
-    _circle(x, y, color);
-    _circle(x, -y, color);
+    _redraw_all_poles();
 }
 
 function erase_circle_pair(x, y) { 
     if (!remove_pole_pair(x,y)) {
         return;
     }
-    _circle(x, y, 'white');
-    _circle(x, -y, 'white');
-    draw_axes();
+    _redraw_all_poles();
+}
+
+function move_pole_pair(poles, x, y) {
+    if (poles.length !== 2) {
+        return;
+    }
+    var oldx = poles[0][0];
+    var oldy = poles[0][1];
+    if (!remove_pole_pair(oldx, oldy)) {
+        return;
+    }
+    if (!add_pole_pair(x, y)) {
+        return;
+    }
+    _redraw_all_poles();
 }
 
 function recolor_poles(poles, color) {
@@ -133,14 +145,13 @@ function recolor_poles(poles, color) {
     }
 }
 
-function move_pole_pair(poles, x, y) {
-    if (poles.length !== 2) {
-        return;
+function _redraw_all_poles() {
+    _reset_canvas();
+    draw_axes();
+    for (var i = 0; i < poles.length; i++) {
+        _circle(poles[i][0], poles[i][1], 'green');
     }
-    var oldx = poles[0][0];
-    var oldy = poles[0][1];
-    erase_circle_pair(oldx, oldy);
-    draw_circle_pair(x, y, 'blue');
+    recolor_poles(dragging_poles, 'blue');
 }
 
 function _circle(x, y, color) {
@@ -153,6 +164,11 @@ function _circle(x, y, color) {
     context.arc(x + w/2, y + h/2, r, 0, 2 * Math.PI, false);
     context.fillStyle = color;
     context.fill();
+}
+
+function _reset_canvas() {
+    splane_context.fillStyle = 'white';
+    splane_context.fillRect(0,0,w,h);
 }
 
 function draw_axes() {
@@ -169,6 +185,10 @@ function draw_axes() {
     splane_context.lineTo(w, h/2);
     splane_context.closePath();
     splane_context.stroke();
+    
+    splane_context.fillStyle = 'black';
+    splane_context.fillText('gain', .95*w, .45*h);
+    splane_context.fillText('frequency', .55*w, .05*h);
 }
 
 }
