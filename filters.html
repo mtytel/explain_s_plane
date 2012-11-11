@@ -35,13 +35,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>
-Title
+Interactive S-Plane
 </title>
 
     <script src="canvas.js"></script>
     <script src="jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
     <script src="underscore-min.js"></script>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
     <link rel="stylesheet" type="text/css" href = "style/simple.css" />
 
 <!-- Slider stuff -->
@@ -66,14 +68,15 @@ Title
 
 <body>
 
-<h1> JavaScript Processing </h1>
+<h1> Interactive S-Plane </h1>
 
+<div id="scale-slider"></div>
 <!-- Drawing poles in the s-plane -->
 <div id="s-plane-container">
     <canvas id="s-plane" width="500" height="500"></canvas>
     <div id='function'>
-      Transfer Function:
-      <p id='transfer-function'>1</p>
+      Filter Function:
+      <p id='recursion-function'>1</p>
     </div>
 </div>
 

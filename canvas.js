@@ -88,13 +88,14 @@ function update_data() {
         return;
     }
     var ps = [];
+    var rs = [];
     for (var i = 0; i < poles.length; i++) {
         var x = poles[i][0];
         var y = poles[i][1];
-        //ps.push([r/RADIUS, complex(x/(w/2)*k, y/(h/2)*k)]);
+        rs.push(poles[i][2] / RADIUS);
         ps.push(complex(x/(w/2)*k, y/(h/2)*k));
     }
-    updateFilterWithPoles(ps);
+    updateFilterWithPoles(ps, rs);
 }
 
 /* POLE FUNCTIONS ***************************/

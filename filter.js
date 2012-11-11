@@ -56,15 +56,16 @@ function filter() {
   }
 
   var toFunctionString = function() {
-    var numerator = "" + in_coefs[0];
-    var denominator = "1";
+    var total = "y(n) = " + in_coefs[0] + "x(n)";
     for (var i = 1; i < MAX_POLES; i++) {
       if (in_coefs[i] != 0)
-        numerator += " + " + round(in_coefs[i]) + "z^-" + i;
-      if (out_coefs[i] != 0)
-        denominator += " + " + -round(out_coefs[i]) + "z^-" + i;
+        total += " + " + round(in_coefs[i]) + "x(n - " + i + ")";
     }
-    return "(" + numerator + ") / (" + denominator + ")";
+    for (var i = 1; i < MAX_POLES; i++) {
+      if (out_coefs[i] != 0)
+        total += " + " + round(out_coefs[i]) + "y(n - " + i + ")";
+    }
+    return total;
   }
 
 
@@ -81,6 +82,7 @@ function filter() {
     for (var i = 0; i < MAX_POLES; i++) {
       output += ins[i] * in_coefs[i] + outs[i] * out_coefs[i];
     }
+    outs[0] = clip(output / 1000000) * 1000000;
     outs[0] = output;
     return output;
   }
@@ -157,21 +159,23 @@ function transformPoles(sPoles) {
 var leftFilter = filter();
 var rightFilter = filter();
 
-function getFunctionForZPoles(zPoles) {
-  var numerator = polynomial([complex(1, 0)]);
+function getFunctionForZPoles(zPoles, mags) {
+  var numerator = polynomial([complex(mags[0], 0)]);
   var denominator = polynomial([complex(1, 0), zPoles[0].neg()]);
 
   for (var i = 1; i < zPoles.length; i++) {
+    var localNumerator = polynomial([complex(mags[i], 0)]);
     var localDenominator = polynomial([complex(1, 0), zPoles[i].neg()]);
     numerator = numerator.mult(localDenominator);
-    numerator = numerator.add(denominator);
+    numerator = numerator.add(denominator.mult(localNumerator));
     denominator = denominator.mult(localDenominator);
   }
-  var scale = polynomial([complex(1 / numerator.coefs[0].r, 0)]);
+  var scale_value = $('#scale-slider').slider('option', 'value') / 100;
+  var scale = polynomial([complex(scale_value, 0)]);
   return [scale.mult(numerator), denominator];
 }
 
-function updateFilterWithPoles(sPoles) {
+function updateFilterWithPoles(sPoles, mags) {
   var in_coefs = [];
   var out_coefs = [];
   for (var i = 0; i < MAX_POLES; i++) {
@@ -179,7 +183,7 @@ function updateFilterWithPoles(sPoles) {
     out_coefs[i] = 0;
   }
   var zPoles = transformPoles(sPoles);
-  var funct = getFunctionForZPoles(zPoles);
+  var funct = getFunctionForZPoles(zPoles, mags);
   for (var i = 0; i < funct[0].coefs.length && i < MAX_POLES; i++)
     in_coefs[i] = funct[0].coefs[i].r;
   for (var i = 1; i < funct[1].coefs.length && i < MAX_POLES; i++)
@@ -190,13 +194,13 @@ function updateFilterWithPoles(sPoles) {
   leftFilter.setOutCoefficients(out_coefs);
   rightFilter.setOutCoefficients(out_coefs);
 
-  $('#transfer-function').html(leftFilter.toFunctionString());
+  $('#recursion-function').html(leftFilter.toFunctionString());
 }
 
 function clip(s) {
-  if (s > 1)
+  if (s >= 1)
     return 1;
-  if (s < -1)
+  if (s <= -1)
     return -1;
   return s;
 }
