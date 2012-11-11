@@ -38,7 +38,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Title
 </title>
 
-<link rel="stylesheet" type="text/css" href = "style/simple.css" />
+    <script src="canvas.js"></script>
+    <script src="jquery.min.js"></script>
+    <script src="underscore-min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href = "style/simple.css" />
 
 <!-- Slider stuff -->
 <script type="text/javascript" src="lib/events.js"></script>
@@ -336,6 +340,9 @@ function init() {
 <p>
 This example illustrates a simple amplitude modulation effect processed directly in JavaScript.
 </p>
+
+<!-- Drawing poles in the s-plane -->
+<div><canvas id="s-plane" width="400" height="400"></canvas></div>
 
 <!-- Real-time visualizer view -->
 <canvas id="view1" width="800px" height="600px"></canvas>
