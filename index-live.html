@@ -1,0 +1,60 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>
+Interactive S-Plane
+</title>
+
+    <script src="canvas.js"></script>
+    <script src="jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+    <script src="underscore-min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href = "style/simple.css" />
+
+<!-- Slider stuff -->
+<script type="text/javascript" src="lib/events.js"></script>
+<style type="text/css">
+  #slider { margin: 10px; }
+</style>
+
+<!-- WebGL stuff -->
+<script src="visualizer-gl/o3djs/base.js"></script>
+<script src="visualizer-gl/cameracontroller.js"></script>
+
+<!-- TODO(kbr): remove this dependency -->
+<script src="visualizer-gl/moz/matrix4x4.js"></script>
+
+<!-- Visualizer GL library -->
+<script type="text/javascript" src="filter-live.js"></script>
+<script type="text/javascript" src="visualizer-gl/visualizer.js"></script>
+<script type="text/javascript" src="init.js"></script>
+
+</head>
+
+<body>
+
+<h1> Interactive S-Plane </h1>
+
+<h4>Function Scale</h4>
+<div id="slider-container">
+    <div id="scale-slider"></div>
+</div>
+<!-- Drawing poles in the s-plane -->
+<div id="s-plane-container">
+    <canvas id="s-plane" width="500" height="500"></canvas>
+    <div id='function'>
+      <h4>Filter Function</h4>
+      <p id='recursion-function'>1</p>
+    </div>
+    <h4>Examples</h4>
+    <button id="filter_sweep">Filter Sweep</button>
+</div>
+
+<!-- Real-time visualizer view + controls -->
+<div id="output-container">
+    <canvas id="view1" width="800px" height="500px"></canvas>
+</div>
+</body>
+</html>
