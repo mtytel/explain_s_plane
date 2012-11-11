@@ -8,12 +8,12 @@ var poles = [];
 window.poles = poles;
 var MAX_POLES = 10;
 var RADIUS = 7;
-var dragging = false;
 var dragging_poles = [];
+var resizing_pole = null;
 
 var w = splane.width;
 var h = splane.height;
-var k = 2; // we will think of the plane as 2 x 2 
+var k = 1.5; // we will think of the plane as 2k by 2k
 
 setInterval(update_data, 10);
 
@@ -22,32 +22,60 @@ draw_axes();
 $splane.on('mousedown', function(ev) {
     var x = ev.offsetX - w/2;
     var y = ev.offsetY - h/2;
-    var touching = touching_pole(x,y);
-    if (touching === null) {
+    var touching_pole = touching_pole(x,y);
+    if (touching_pole === null) {
+        // create new poles
         draw_circle_pair(x, y, 'green');
-    } else {
-        recolor_poles(touching, 'blue');
-        dragging = true;
-        dragging_poles = touching;
+        return;
     }
+    var touching = get_pole_pair(touching_pole);
+    if (ev.shiftKey) {
+        // enter resizing mode
+        recolor_poles(touching, 'brown');
+        resizing_pole = touching_pole;
+        $splane.on('mousemove', throttled_resize);
+        $splane.on('mouseup', end_resize);
+        return;
+    }
+    // enter dragging mode
+    recolor_poles(touching, 'blue');
+    dragging_poles = touching;
+    $splane.on('mousemove', throttled_drag);
+    $splane.on('mouseup', end_drag);
 });
 
-var omm = function(ev) {
-    if (dragging) {
-        var x = ev.offsetX - w/2;
-        var y = ev.offsetY - h/2;
-        move_pole_pair(dragging_poles, x, y);
-        dragging_poles = [[x,y],[x,-y]];
-    }
+var drag = function(ev) {
+    var x = ev.offsetX - w/2;
+    var y = ev.offsetY - h/2;
+    move_pole_pair(dragging_poles, x, y);
+    dragging_poles = [[x,y],[x,-y]];
 };
-var on_mouse_move = _.throttle(omm, 10);
-$splane.on('mousemove', on_mouse_move);
-
-$splane.on('mouseup', function(ev) {
+var throttled_drag = _.throttle(drag, 10);
+var end_drag = function(ev) {
     recolor_poles(dragging_poles, 'green');
-    dragging = false;
     dragging_poles = [];
+    $splane.off('mousemove');
+};
+
+var resize = function(ev) {
+    var x = ev.offsetX - w/2;
+    var y = ev.offsetY - h/2;
+    var px = resizing_pole[0];
+    var py = resizing_pole[1];
+    var d = Math.sqrt( Math.pow(px-x,2) + Math.pow(py-y,2) );
+    if ( d < resizing_pole[2] ) {
+        return;
+    }
+    var r = d * .5;
+    resize_pole_pair(get_pole_pair(resizing_pole), r);
 });
+var throttled_resize = _.throttle(resize, 10);
+var end_resize = function(ev) {
+    recolor_poles(get_pole_pair(resizing_pole), 'green');
+    resizing_pole = null;
+    $splane.off('mousemove');
+};
+
 
 function update_data() {
     if (poles.length === 0) {
@@ -61,6 +89,8 @@ function update_data() {
     }
     updateFilterWithPoles(ps);
 }
+
+/* POLE FUNCTIONS ***************************/
 
 function add_pole_pair(x, y) {
     if (poles.length > MAX_POLES - 2) {
@@ -95,17 +125,33 @@ function pole_index(x, y) {
 }
 
 function touching_pole(x, y) {
-    // if x, y lie within a pole's circle, returns a copy of that pole and its pair.  else returns null
-    var i;
-    for (i = 0; i < poles.length; i++) {
+    // if x, y lie within a pole's circle, returns a copy of that pole. else returns null
+    for (var i = 0; i < poles.length; i++) {
         var px = poles[i][0];
         var py = poles[i][1];
-        if (Math.abs(px - x) <= RADIUS && Math.abs(py - y) <= RADIUS) {
-            return [[px,py], [px,-py]];
+        var pr = poles[i][2];
+        if (Math.abs(px - x) <= pr && Math.abs(py - y) <= pr) {
+            return [px, py];;
         }
     }
     return null;
 }
+
+function get_pole_pair(pole) {
+    // given one pole, returns a copy of that pole and its corresponding pole
+    var x = pole[0];
+    var y = pole[1];
+    for (var i = 0; i < poles.length; i++) {
+        var px = poles[i][0];
+        var py = poles[i][1];
+        if (x === px && y === py) {
+            
+        }
+    }
+    return null;
+}
+
+/* CANVAS FUNCTIONS *************************/
 
 function draw_circle_pair(x, y, color) {
     if (!add_pole_pair(x,y)) {
