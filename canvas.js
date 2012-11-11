@@ -15,8 +15,6 @@ var w = splane.width;
 var h = splane.height;
 var k = 2; // we will think of the plane as 2 x 2 
 
-console.log('canvas.js is here');
-
 setInterval(update_data, 500);
 
 draw_axes();
@@ -52,6 +50,9 @@ $splane.on('mouseup', function(ev) {
 });
 
 function update_data() {
+    if (poles.length === 0) {
+        return;
+    }
     var ps = [];
     for (var i = 0; i < poles.length; i++) {
         var x = poles[i][0];
@@ -143,9 +144,13 @@ function move_pole_pair(poles, x, y) {
 }
 
 function _circle(x, y, color) {
+    var r = RADIUS;
+    if (color === 'white') {
+        r += .1*r;
+    }
     var context = splane_context;
     context.beginPath();
-    context.arc(x + w/2, y + h/2, RADIUS, 0, 2 * Math.PI, false);
+    context.arc(x + w/2, y + h/2, r, 0, 2 * Math.PI, false);
     context.fillStyle = color;
     context.fill();
 }
