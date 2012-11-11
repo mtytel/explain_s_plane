@@ -77,13 +77,12 @@ This example illustrates a simple amplitude modulation effect processed directly
     <canvas id="s-plane" width="500" height="500"></canvas>
 </div>
 
-<!-- Real-time visualizer view -->
-<canvas id="view1" width="800px" height="600px"></canvas>
-
-<!-- Sliders and other controls will be added here -->
-<div id="controls"> </div>
-
-<div id="info"> </div>
+<!-- Real-time visualizer view + controls -->
+<div id="output-container">
+    <canvas id="view1" width="800px" height="600px"></canvas>
+    <div id="controls"> </div>
+    <div id="info"> </div>
+</div>
 
 <!-- Analyser type -->
 <input type="radio" name="radioSet" value="data" onMouseDown="analyserView1.setAnalysisType(ANALYSISTYPE_FREQUENCY);" />
