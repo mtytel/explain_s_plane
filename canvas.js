@@ -15,9 +15,15 @@ var w = splane.width;
 var h = splane.height;
 var k = 0.4; // we will think of the plane as 2k by 2k
 
+/* INITIAL CANVAS SETUP *********************/
+
 setInterval(update_data, 10);
 
 draw_axes();
+
+$('#filter_sweep').on('click', filter_sweep);
+
+/* CANVAS EVENTS ***************************/
 
 $splane.on('mousedown', function(ev) {
     var x = ev.offsetX - w/2;
@@ -96,6 +102,33 @@ function update_data() {
         ps.push(complex(x/(w/2)*k, y/(h/2)*k));
     }
     updateFilterWithPoles(ps, rs);
+}
+
+/* PRESET MOVEMENTS / DEMOS *****************/
+
+function filter_sweep() {
+    poles = [];
+    _redraw_all_poles();
+    poles = [[-.01*w/2, .9*h/2, RADIUS], [-.01*w/2, -.9*h/2, RADIUS]];
+    _redraw_all_poles();
+    var i = 0;
+    
+    loop();
+
+    function loop() {
+        if (i > 185) {
+            return;
+        }
+        shift_poles();
+        i++;
+        setTimeout(loop, 50);
+    }
+
+    function shift_poles() {
+        poles[0][1] -= .01*h/2;
+        poles[1][1] = -poles[0][1];
+        _redraw_all_poles();
+    }
 }
 
 /* POLE FUNCTIONS ***************************/
