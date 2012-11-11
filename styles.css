@@ -1,3 +1,9 @@
+.info {
+    font-weight: 100;
+    color:rgb(100,85,85);
+    font-size:90%;
+}
+
 #slider-container {
     margin: 20px 50px;
 }

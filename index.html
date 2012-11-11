@@ -36,6 +36,7 @@ Interactive S-Plane
 <body>
 
 <h1> Interactive S-Plane </h1>
+<p class="info">Draw poles in the s plane for a Laplace transform, which is converted to a filter function.  This demo only works in the Google Chrome Browser.  Taking mic input (feature coming soon) will only work in Chrome Canary with the Web Audio Input flag enabled.</p>
 
 <h4>Function Scale</h4>
 <div id="slider-container">
@@ -44,6 +45,9 @@ Interactive S-Plane
 <!-- Drawing poles in the s-plane -->
 <div id="s-plane-container">
     <canvas id="s-plane" width="500" height="500"></canvas>
+    <p class="info">
+        Click and drag to create poles in the s plane.  Shift+click to resize poles.
+    </p>
     <div id='function'>
       <h4>Filter Function</h4>
       <p id='recursion-function'>1</p>
