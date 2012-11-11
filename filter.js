@@ -6,7 +6,7 @@ var jsProcessor = 0;
 var analyser;
 var analyserView1;
 
-var MAX_POLES = 10;
+var MAX_POLES = 12;
 
 function complex(r, i) {
   return {
@@ -172,6 +172,14 @@ function updateFilterWithPoles(sPoles) {
   rightFilter.setOutCoefficients(out_coefs);
 }
 
+function clip(s) {
+  if (s > 1)
+    return 1;
+  if (s < -1)
+    return -1;
+  return s;
+}
+
 function process(event) {
   // Get left/right input and output arrays
   var inputArrayL = event.inputBuffer.getChannelData(0);
@@ -183,8 +191,8 @@ function process(event) {
   for (var i = 0; i < n; ++i) {
     var l = Math.random() - 0.5;
     var r = Math.random() - 0.5;
-    outputArrayL[i] = leftFilter.next(l);
-    outputArrayR[i] = rightFilter.next(r);
+    outputArrayL[i] = clip(leftFilter.next(l));
+    outputArrayR[i] = clip(rightFilter.next(r));
   }
 }
 
