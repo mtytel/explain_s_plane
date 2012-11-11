@@ -79,7 +79,12 @@ function remove_pole_pair(x, y) {
     if (i === -1) {
         return false;
     }
-    poles.splice(i,2);
+    poles.splice(i,1);
+    var i = pole_index(x,-y);
+    if (i === -1) {
+        return false;
+    }
+    poles.splice(i,1);
     return true;
 }
 
