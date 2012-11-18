@@ -44,11 +44,21 @@ function filter() {
   in_coefs[0] = 1;
 
   var setOutCoefficients = function(out_coefficients) {
-    out_coefs = out_coefficients;
+    for (var i = 0; i < MAX_POLES; i++) {
+      if (i < out_coefficients.length)
+        out_coefs[i] = out_coefficients[i];
+      else
+        out_coefs[i] = 0.0;
+    }
   };
 
   var setInCoefficients = function(in_coefficients) {
-    in_coefs = in_coefficients;
+    for (var i = 0; i < MAX_POLES; i++) {
+      if (i < in_coefficients.length)
+        in_coefs[i] = in_coefficients[i];
+      else
+        in_coefs[i] = 0.0;
+    }
   };
 
   function round(num) {
@@ -143,7 +153,7 @@ function polynomial(coefficients) {
   }
 }
 
-function transformPoles(sPoles) {
+function transformPoints(sPoles) {
   var zPoles = [];
   var half = complex(0.5, 0);
   var one = complex(1, 0);
@@ -175,6 +185,21 @@ function getFunctionForZPoles(zPoles, mags) {
   return [scale.mult(numerator), denominator];
 }
 
+function getFunctionForZPolesAndZeros(zPoles, zZeros) {
+  var numerator = polynomial([complex(1, 0)]);
+  var denominator = polynomial([complex(1, 0)]);
+
+  for (var i = 0; i < zZeros.length; i++) {
+    numerator = numerator.mult(polynomial([complex(1, 0), zZeros[i].neg()]));
+  }
+  for (var i = 0; i < zPoles.length; i++) {
+    denominator = denominator.mult(polynomial([complex(1, 0), zPoles[i].neg()]));
+  }
+  var scale_value = $('#scale-slider').slider('option', 'value') / 1000;
+  var scale = polynomial([complex(scale_value * scale_value * scale_value * scale_value, 0)]);
+  return [scale.mult(numerator), denominator];
+}
+
 function updateFilterWithPoles(sPoles, mags) {
   var in_coefs = [];
   var out_coefs = [];
@@ -182,8 +207,31 @@ function updateFilterWithPoles(sPoles, mags) {
     in_coefs[i] = 0;
     out_coefs[i] = 0;
   }
-  var zPoles = transformPoles(sPoles);
+  var zPoles = transformPoints(sPoles);
   var funct = getFunctionForZPoles(zPoles, mags);
+  for (var i = 0; i < funct[0].coefs.length && i < MAX_POLES; i++)
+    in_coefs[i] = funct[0].coefs[i].r;
+  for (var i = 1; i < funct[1].coefs.length && i < MAX_POLES; i++)
+    out_coefs[i] = -funct[1].coefs[i].r;
+
+  leftFilter.setInCoefficients(in_coefs);
+  rightFilter.setInCoefficients(in_coefs);
+  leftFilter.setOutCoefficients(out_coefs);
+  rightFilter.setOutCoefficients(out_coefs);
+
+  $('#recursion-function').html(leftFilter.toFunctionString());
+}
+
+function updateFilterWithPolesAndZeros(sPoles, sZeros) {
+  var in_coefs = [];
+  var out_coefs = [];
+  for (var i = 0; i < MAX_POLES; i++) {
+    in_coefs[i] = 0;
+    out_coefs[i] = 0;
+  }
+  var zPoles = transformPoints(sPoles);
+  var zZeros = transformPoints(sZeros);
+  var funct = getFunctionForZPolesAndZeros(zPoles, zZeros);
   for (var i = 0; i < funct[0].coefs.length && i < MAX_POLES; i++)
     in_coefs[i] = funct[0].coefs[i].r;
   for (var i = 1; i < funct[1].coefs.length && i < MAX_POLES; i++)
