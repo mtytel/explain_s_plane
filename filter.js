@@ -189,14 +189,14 @@ function getFunctionForZPolesAndZeros(zPoles, zZeros) {
   var numerator = polynomial([complex(1, 0)]);
   var denominator = polynomial([complex(1, 0)]);
 
-  for (var i = 1; i < zZeros.length; i++) {
+  for (var i = 0; i < zZeros.length; i++) {
     numerator = numerator.mult(polynomial([complex(1, 0), zZeros[i].neg()]));
   }
-  for (var i = 1; i < zPoles.length; i++) {
+  for (var i = 0; i < zPoles.length; i++) {
     denominator = denominator.mult(polynomial([complex(1, 0), zPoles[i].neg()]));
   }
-  var scale_value = $('#scale-slider').slider('option', 'value') / 100;
-  var scale = polynomial([complex(scale_value, 0)]);
+  var scale_value = $('#scale-slider').slider('option', 'value') / 1000;
+  var scale = polynomial([complex(scale_value * scale_value * scale_value * scale_value, 0)]);
   return [scale.mult(numerator), denominator];
 }
 
