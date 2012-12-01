@@ -27,6 +27,7 @@ setInterval(update_data, 10);
 draw_axes();
 
 $('#filter_sweep').on('click', filter_sweep);
+$('#butterworth').on('click', butterworth);
 
 /* CANVAS EVENTS ***************************/
 
@@ -113,6 +114,18 @@ function filter_sweep() {
     }
 }
 
+function butterworth() {
+    points = [];
+    poles = [];
+    zeros = [];
+    _redraw_all_points();
+    var r = 0.05;
+    add_pole(r * -0.259, r * 0.966);
+    add_pole(r * -0.707, r * 0.707);
+    add_pole(r * -0.966, r * 0.259);
+    _redraw_all_points();
+}
+
 /* POINT FUNCTIONS ***************************/
 
 function add_zero(x, y) {
@@ -137,7 +150,6 @@ function add_pole(x, y) {
 
 function within_radius(x1, y1, x2, y2, r) {
   return Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) <= r * r;
-
 }
 
 function touching_point(x, y) {
