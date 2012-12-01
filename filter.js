@@ -192,13 +192,13 @@ function getFunctionForZPolesAndZeros(zPoles, zZeros) {
   var denominator = polynomial([complex(1, 0)]);
 
   for (var i = 0; i < zZeros.length; i++) {
+    auto_scale = auto_scale * 1.5;
     numerator = numerator.mult(polynomial([complex(1, 0), zZeros[i].neg()]));
   }
   for (var i = 0; i < zPoles.length; i++) {
-    auto_scale = auto_scale * (1 - Math.sqrt(zPoles[i].r * zPoles[i].r + zPoles[i].i * zPoles[i].i));
+    auto_scale = auto_scale / 1.5;
     denominator = denominator.mult(polynomial([complex(1, 0), zPoles[i].neg()]));
   }
-  auto_scale = Math.sqrt(auto_scale);
   var scale_value = ($('#scale-slider').slider('option', 'value') / 1000);
   var scale = polynomial([complex(auto_scale * scale_value * scale_value * scale_value * scale_value, 0)]);
   return [scale.mult(numerator), denominator];
