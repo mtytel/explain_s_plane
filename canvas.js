@@ -119,10 +119,10 @@ function butterworth() {
     poles = [];
     zeros = [];
     _redraw_all_points();
-    var r = 0.3 * k;
-    add_pole(r * -0.259, r * 0.966);
-    add_pole(r * -0.707, r * 0.707);
-    add_pole(r * -0.966, r * 0.259);
+    var r = 0.3;
+    add_pole((w/2) * r * -0.259, (h/2) * r * 0.966);
+    add_pole((w/2) * r * -0.707, (h/2) * r * 0.707);
+    add_pole((w/2) * r * -0.966, (h/2) * r * 0.259);
     _redraw_all_points();
 }
 
