@@ -195,11 +195,11 @@ function getFunctionForZPolesAndZeros(zPoles, zZeros) {
     numerator = numerator.mult(polynomial([complex(1, 0), zZeros[i].neg()]));
   }
   for (var i = 0; i < zPoles.length; i++) {
-    // auto_scale = auto_scale * (1 - Math.sqrt(zPoles[i].r * zPoles[i].r + zPoles[i].c * zPoles[i].c))
+    auto_scale = auto_scale * (1 - Math.sqrt(zPoles[i].r * zPoles[i].r + zPoles[i].c * zPoles[i].c))
     denominator = denominator.mult(polynomial([complex(1, 0), zPoles[i].neg()]));
   }
-  var scale_value = auto_scale * $('#scale-slider').slider('option', 'value') / 1000;
-  var scale = polynomial([complex(scale_value * scale_value * scale_value * scale_value, 0)]);
+  var scale_value = ($('#scale-slider').slider('option', 'value') / 1000);
+  var scale = polynomial([complex(auto_scale * scale_value * scale_value * scale_value * scale_value, 0)]);
   return [scale.mult(numerator), denominator];
 }
 
