@@ -195,7 +195,7 @@ function getFunctionForZPolesAndZeros(zPoles, zZeros) {
     numerator = numerator.mult(polynomial([complex(1, 0), zZeros[i].neg()]));
   }
   for (var i = 0; i < zPoles.length; i++) {
-    auto_scale = auto_scale * (2 - zPoles[i].r * zPoles[i].r + zPoles[i].i * zPoles[i].i) / 2;
+    auto_scale = auto_scale * (1 - Math.sqrt(zPoles[i].r * zPoles[i].r + zPoles[i].i * zPoles[i].i));
     denominator = denominator.mult(polynomial([complex(1, 0), zPoles[i].neg()]));
   }
   var scale_value = auto_scale * ($('#scale-slider').slider('option', 'value') / 1000);
