@@ -199,7 +199,7 @@ function getFunctionForZPolesAndZeros(zPoles, zZeros) {
     denominator = denominator.mult(polynomial([complex(1, 0), zPoles[i].neg()]));
   }
   var scale_value = ($('#scale-slider').slider('option', 'value') / 1000);
-  var scale = polynomial([complex(auto_scale * auto_scale * scale_value * scale_value * scale_value * scale_value, 0)]);
+  var scale = polynomial([complex(auto_scale * scale_value * scale_value * scale_value * scale_value, 0)]);
   return [scale.mult(numerator), denominator];
 }
 
